@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/tdusa/static/css/main.d1b05096.chunk.css",
-    "main.js": "/tdusa/static/js/main.65812b28.chunk.js",
-    "main.js.map": "/tdusa/static/js/main.65812b28.chunk.js.map",
+    "main.js": "/tdusa/static/js/main.bd644c68.chunk.js",
+    "main.js.map": "/tdusa/static/js/main.bd644c68.chunk.js.map",
     "runtime-main.js": "/tdusa/static/js/runtime-main.27631b14.js",
     "runtime-main.js.map": "/tdusa/static/js/runtime-main.27631b14.js.map",
     "static/js/2.95d9dc0f.chunk.js": "/tdusa/static/js/2.95d9dc0f.chunk.js",
     "static/js/2.95d9dc0f.chunk.js.map": "/tdusa/static/js/2.95d9dc0f.chunk.js.map",
     "index.html": "/tdusa/index.html",
-    "precache-manifest.59a2dffd1847f18822bb4f2e7749cea9.js": "/tdusa/precache-manifest.59a2dffd1847f18822bb4f2e7749cea9.js",
+    "precache-manifest.1079a967061f562ba85a48eb519388f3.js": "/tdusa/precache-manifest.1079a967061f562ba85a48eb519388f3.js",
     "service-worker.js": "/tdusa/service-worker.js",
     "static/css/main.d1b05096.chunk.css.map": "/tdusa/static/css/main.d1b05096.chunk.css.map",
     "static/js/2.95d9dc0f.chunk.js.LICENSE": "/tdusa/static/js/2.95d9dc0f.chunk.js.LICENSE",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.27631b14.js",
     "static/js/2.95d9dc0f.chunk.js",
     "static/css/main.d1b05096.chunk.css",
-    "static/js/main.65812b28.chunk.js"
+    "static/js/main.bd644c68.chunk.js"
   ]
 }
