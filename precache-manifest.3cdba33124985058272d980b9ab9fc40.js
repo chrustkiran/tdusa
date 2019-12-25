@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "149a3a044524fb7574cac3a31bc43572",
+    "revision": "c1052b46f005ad41ffbe1961e77f51ed",
     "url": "/tdusa/index.html"
   },
   {
-    "revision": "e69bb48b904d59a98634",
+    "revision": "61eebc419997050873e4",
     "url": "/tdusa/static/css/main.d1b05096.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tdusa/static/js/2.95d9dc0f.chunk.js.LICENSE"
   },
   {
-    "revision": "e69bb48b904d59a98634",
-    "url": "/tdusa/static/js/main.bd644c68.chunk.js"
+    "revision": "61eebc419997050873e4",
+    "url": "/tdusa/static/js/main.2972ebb7.chunk.js"
   },
   {
     "revision": "dac0254da5a617b9cdd8",
