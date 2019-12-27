@@ -13,6 +13,11 @@
   justify-content: start;
 }
 
+.excel_25{
+mix-blend-mode: multiply;
+}
+
+
 /* Normal desktop :1200px. */
 /* Normal desktop :992px. */
 /* Tablet desktop :768px. */
