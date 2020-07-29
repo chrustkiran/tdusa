@@ -8,7 +8,7 @@ import Papa from 'papaparse';
 export default class Index extends React.Component{
 
   state = {
-    startedYear : 2019,
+    startedYear : 2020,
     comiteeMembers : [],
     events : []
   }
