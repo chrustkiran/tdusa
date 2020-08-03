@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import CountUp from 'react-countup';
-import { Icon,Popover, Button } from 'antd';
+import {Button, Modal, Input, Col, Row, Tag } from 'antd';
 import Papa from 'papaparse';
+import {db} from "../conf/FirebaseConf";
+
+const { Search } = Input;
 
 
 export default class Index extends React.Component{
@@ -10,8 +13,19 @@ export default class Index extends React.Component{
   state = {
     startedYear : 2020,
     comiteeMembers : [],
-    events : []
-  }
+    events : [],
+    visibleModal: false,
+    showResults: false,
+    searchStarted: false,
+    resultObj: {},
+    searchMode : false
+  };
+
+  showModal = () => {
+    this.setState({
+      visibleModal: true,
+    });
+  };
 
   fetchEvent = () =>{
     var data = []
@@ -21,8 +35,6 @@ export default class Index extends React.Component{
       credentials: "same-origin", //include, same-origin
       headers: {Accept: 'application/json', 'Content-Type': 'application/json',},
      complete: function(results) {
-         console.log("data", results.data);
-         //console.log(results.data[1][6]);
           data =  results.data.map((item,index) => (
             item[0] != "name" ?  <div className="col-xl-4 col-md-6 col-lg-4">
             <div className="single_service text-center">
@@ -37,12 +49,10 @@ export default class Index extends React.Component{
           ) 
             )
         this.setState({events : data})
-        console.log("data", data)
         
      }.bind(this)
  });
- console.log("data", data)
-  }
+  };
 
   fetchcomiteeMembers = () =>{
     var data = []
@@ -52,8 +62,6 @@ export default class Index extends React.Component{
       credentials: "same-origin", //include, same-origin
       headers: {Accept: 'application/json', 'Content-Type': 'application/json',},
      complete: function(results) {
-         console.log("data", results.data);
-         //console.log(results.data[1][6]);
           data =  results.data.map((item,index) => (
             item[0] != "name" ? <div style = {{marginTop : "50px"}} className={index < 7 ? "col-xl-2 col-lg-2 col-md-2" : "col-xl-4 col-lg-4 col-md-4"}>
             <img onError={(e)=> {e.target.onerror = null; e.target.src = 'resources/img/team/3.jpg'}} width="80px" height="80px" style={{borderRadius:"50px"}} src={"//drive.google.com/uc" + item[2].substring(29)}></img>
@@ -63,13 +71,10 @@ export default class Index extends React.Component{
           ) 
             )
         this.setState({comiteeMembers : data})
-        console.log("data", data)
         
      }.bind(this)
  });
- console.log("data", data)
-
-  }
+  };
 
 
 
@@ -102,13 +107,134 @@ monitoringCommitee2 = () => {
   trackScrolling = () => {
     const wrappedElement = document.getElementById('count');
     if (this.isTop(wrappedElement)) {
-      console.log('count top reached');
       this.setState({startedYear : 1995});
       document.removeEventListener('scroll', this.trackScrolling);
     }
   };
 
+  checkShowResults = () => {
+    db.ref('/setting/').on('value', querySnapShot => {
+      const setting = querySnapShot.val() ? querySnapShot.val() : {};
+      this.setState({...setting});
+    });
+  };
+
+  fetchResults = (index) => {
+    this.setState({searchMode : false});
+    db.ref('/' + process.env.REACT_APP_EXAM_YEAR + '/' + index).on('value', querySnapShot => {
+      const resultsObj = querySnapShot.val() ? querySnapShot.val() : {};
+      this.setState({searchStarted: false});
+      this.setState({resultObj: resultsObj});
+      this.setState({searchMode : true});
+    });
+  };
+
+  showResultsInView = () => {
+    return this.state.showResults ? (
+        <div className="col-xl-12">
+          <Button onClick={this.showModal} type="" shape="round"  size={12} style={{backgroundColor: '#FFFF00', color: 'blue', fontWeight: 'bold'}}>
+            Check Results
+          </Button>
+          <Modal
+              title={process.env.REACT_APP_RESULT_TITLE}
+              visible={this.state.visibleModal}
+              onOk={this.handleOk}
+              onCancel={this.handleCancel}>
+            <p>
+              <Search placeholder="Index Number" onSearch={value => {
+                this.setState({searchStarted: true});
+                this.fetchResults(value);
+              }} enterButton />
+              {this.state.searchStarted ? <div  className="text-center">Loading...</div> : <div></div>}
+              {
+                this.state.searchMode ? (
+                this.state.resultObj.hasOwnProperty('Index Number') ?
+                  <div className="text-justify">
+                    <Row>
+                      <Col span={18} push={8}>
+                        {this.state.resultObj['Index Number']}
+                      </Col>
+                      <Col span={6} pull={18}>
+                        Index Number :
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={18} push={8}>
+                        {this.state.resultObj['Name']}
+                      </Col>
+                      <Col span={6} pull={18}>
+                        Name :
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={18} push={8}>
+                        {this.state.resultObj['Stream']}
+                      </Col>
+                      <Col span={6} pull={18}>
+                        Stream :
+                      </Col>
+                    </Row>
+                    {Object.keys(this.state.resultObj['Results']).map(
+                        subject => (
+                            <Row>
+                              <Col span={18} push={8}>
+                                {'F' == this.state.resultObj['Results'][subject] ?
+                                    <Tag style={{fontWeight: 'bold'}} color={'red'}>{this.state.resultObj['Results'][subject]}</Tag>
+                                    :
+                                    <Tag style={{fontWeight: 'bold'}} color={'green'}>{this.state.resultObj['Results'][subject]}</Tag>
+                                }
+
+                              </Col>
+                              <Col span={6} pull={18}>
+                                {subject} :
+                              </Col>
+                            </Row>
+                        )
+                    )}
+                    <Row>
+                      <Col span={18} push={8}>
+                        {this.state.resultObj['Rank']}
+                      </Col>
+                      <Col span={6} pull={18}>
+                        Rank :
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={18} push={8}>
+                        {this.state.resultObj['Z-Score']}
+                      </Col>
+                      <Col span={6} pull={18}>
+                        Z-Score :
+                      </Col>
+                    </Row>
+                  </div> : <div  className="text-center" style={{color: 'red'}}>
+                    Wrong Index Number
+                  </div>
+                ) : <div></div>
+              }
+            </p>
+          </Modal>
+        </div>
+    ) : <div></div>
+};
+
+  handleOk = e => {
+    this.setState({
+      visibleModal: false,
+      searchMode: false
+    });
+  };
+
+  handleCancel = e => {
+    this.setState({
+      visibleModal: false,
+      searchMode: false
+    });
+  };
+
+
   componentDidMount() {
+    this.checkShowResults()
     this.fetchcomiteeMembers();  
     this.fetchEvent();
     document.addEventListener('scroll', this.trackScrolling);
@@ -225,6 +351,7 @@ monitoringCommitee2 = () => {
                 <div className="slider_active owl-carousel">
                   <div className="single_slider  d-flex align-items-center slider_bg_1 overlay2">
                     <div className="container">
+                      {this.showResultsInView()}
                       <div className="row">
                         <div className="col-xl-12">
                           <div className="slider_text ">
@@ -239,6 +366,7 @@ monitoringCommitee2 = () => {
                   </div>
                   <div className="single_slider  d-flex align-items-center slider_bg_2 overlay2">
                     <div className="container">
+                      {this.showResultsInView()}
                       <div className="row">
                         <div className="col-xl-12">
                           <div className="slider_text ">
@@ -253,6 +381,7 @@ monitoringCommitee2 = () => {
                   </div>
                   <div className="single_slider  d-flex align-items-center slider_bg_1 overlay2">
                     <div className="container">
+                      {this.showResultsInView()}
                       <div className="row">
                         <div className="col-xl-12">
                           <div className="slider_text ">
@@ -267,6 +396,7 @@ monitoringCommitee2 = () => {
                   </div>
                   <div className="single_slider  d-flex align-items-center slider_bg_2 overlay2">
                     <div className="container">
+                      {this.showResultsInView()}
                       <div className="row">
                         <div className="col-xl-12">
                           <div className="slider_text ">
