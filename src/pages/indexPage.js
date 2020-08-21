@@ -1,7 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import CountUp from 'react-countup';
-import {Button, Modal, Input, Col, Row, Tag } from 'antd';
+import {Col, Input, Modal, Row, Tag} from 'antd';
 import Papa from 'papaparse';
 import {db} from "../conf/FirebaseConf";
 
@@ -18,7 +17,8 @@ export default class Index extends React.Component{
     showResults: false,
     searchStarted: false,
     resultObj: {},
-    searchMode : false
+    searchMode : false,
+    indexNumber: ''
   };
 
   showModal = () => {
@@ -133,7 +133,7 @@ monitoringCommitee2 = () => {
     return this.state.showResults ? (
         <div className="col-xl-12">
           <div className="video_service_btn">
-            <a href="#history" onClick={this.showModal} style={{fontSize: 12}} className="boxed-btn3">
+            <a onClick={this.showModal} style={{fontSize: 12}} className="boxed-btn3">
               Check Results
               <div style={{fontSize: 10}} >( 2020 Examinations )</div>
             </a>
@@ -141,13 +141,14 @@ monitoringCommitee2 = () => {
           <Modal
               title={process.env.REACT_APP_RESULT_TITLE}
               visible={this.state.visibleModal}
+              okText="Reset"
               onOk={this.handleOk}
               onCancel={this.handleCancel}>
             <p>
-              <Search placeholder="Index Number" onSearch={value => {
+              <Search id='search' placeholder="Index Number" onChange={this.onSearchValChange} value={this.state.indexNumber} onSearch={value => {
                 this.setState({searchStarted: true});
-                this.fetchResults(value);
-              }} enterButton />
+                this.fetchResults(this.state.indexNumber);
+              }} enterButton = "Submit" />
               {this.state.searchStarted ? <div  className="text-center">Loading...</div> : <div></div>}
               {
                 this.state.searchMode ? (
@@ -179,10 +180,10 @@ monitoringCommitee2 = () => {
                     </Row>
                     <Row>
                       <Col span={18} push={8}>
-                        {this.state.resultObj['nic']}
+                        {this.state.resultObj['school']}
                       </Col>
                       <Col span={6} pull={18}>
-                        NIC :
+                        School :
                       </Col>
                     </Row>
                     {Object.keys(this.state.resultObj['Results']).map(
@@ -228,10 +229,13 @@ monitoringCommitee2 = () => {
         </div>
     ) : <div></div>
 };
+  onSearchValChange = (event) => {
+    this.setState({indexNumber: event.target.value});
+  };
 
   handleOk = e => {
     this.setState({
-      visibleModal: false,
+      indexNumber: '',
       searchMode: false
     });
   };
