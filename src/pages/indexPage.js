@@ -132,9 +132,12 @@ monitoringCommitee2 = () => {
   showResultsInView = () => {
     return this.state.showResults ? (
         <div className="col-xl-12">
-          <Button onClick={this.showModal} type="" shape="round"  size={12} style={{backgroundColor: '#FFFF00', color: 'blue', fontWeight: 'bold'}}>
-            Check Results
-          </Button>
+          <div className="video_service_btn">
+            <a href="#history" onClick={this.showModal} style={{fontSize: 12}} className="boxed-btn3">
+              Check Results
+              <div style={{fontSize: 10}} >( 2020 Examinations )</div>
+            </a>
+          </div>
           <Modal
               title={process.env.REACT_APP_RESULT_TITLE}
               visible={this.state.visibleModal}
@@ -172,6 +175,14 @@ monitoringCommitee2 = () => {
                       </Col>
                       <Col span={6} pull={18}>
                         Stream :
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={18} push={8}>
+                        {this.state.resultObj['nic']}
+                      </Col>
+                      <Col span={6} pull={18}>
+                        NIC :
                       </Col>
                     </Row>
                     {Object.keys(this.state.resultObj['Results']).map(
@@ -232,11 +243,13 @@ monitoringCommitee2 = () => {
     });
   };
 
-
-  componentDidMount() {
-    this.checkShowResults()
-    this.fetchcomiteeMembers();  
+  constructor(props) {
+    super(props);
+    this.checkShowResults();
+    this.fetchcomiteeMembers();
     this.fetchEvent();
+  }
+  componentDidMount() {
     document.addEventListener('scroll', this.trackScrolling);
   }
 
