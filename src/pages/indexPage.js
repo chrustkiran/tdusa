@@ -135,7 +135,7 @@ monitoringCommitee2 = () => {
           <div className="video_service_btn">
             <a onClick={this.showModal} style={{fontSize: 12}} className="boxed-btn3">
               Check Results
-              <div style={{fontSize: 10}} >( 2020 Examinations )</div>
+              <div style={{fontSize: 10}} >( 2021 Examinations )</div>
             </a>
           </div>
           <Modal
